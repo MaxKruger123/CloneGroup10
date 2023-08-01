@@ -33,7 +33,10 @@ public class GunController : MonoBehaviour
     public bool randomizeRecoil;
     public Vector2 randomRecoilConstraints;
     // You only need to assign this if randomized recoil is off
-    public Vector2 recoilPattern;
+    public Vector2[] recoilPattern;
+
+    //Reloading
+    public bool reloading;
     
 
     void Start()
@@ -56,17 +59,7 @@ public class GunController : MonoBehaviour
             StartCoroutine(ShootGun());
         } else if(Input.GetKeyDown(KeyCode.R) && _currentAmmoInClip < clipSize && _ammoInReserve > 0)
         {
-            int amountNeeded = clipSize - _currentAmmoInClip;
-            if (amountNeeded >= _ammoInReserve) 
-            {
-                _currentAmmoInClip += _ammoInReserve;
-                _ammoInReserve -= amountNeeded;
-            }
-            else
-            {
-                _currentAmmoInClip = clipSize;
-                _ammoInReserve -= amountNeeded;
-            }
+            StartCoroutine(Reload());
         }
 
 
@@ -137,5 +130,27 @@ public class GunController : MonoBehaviour
         yield return new WaitForSeconds(0.05f);
         muzzleFlashImage.sprite = null;
         muzzleFlashImage.color = new Color(0, 0, 0, 0);
+    }
+
+    IEnumerator Reload()
+    {
+        _canShoot = false;
+        reloading = true;
+        yield return new WaitForSeconds(2);
+
+        int amountNeeded = clipSize - _currentAmmoInClip;
+        if (amountNeeded >= _ammoInReserve)
+        {
+            _currentAmmoInClip += _ammoInReserve;
+            _ammoInReserve -= amountNeeded;
+        }
+        else
+        {
+            _currentAmmoInClip = clipSize;
+            _ammoInReserve -= amountNeeded;
+        }
+
+        reloading = false;
+        _canShoot = true;
     }
 }

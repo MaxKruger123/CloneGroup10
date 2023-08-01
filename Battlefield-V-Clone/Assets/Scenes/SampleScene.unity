@@ -396,7 +396,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.21960786, g: 0.21960786, b: 0.21960786, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1093,6 +1093,7 @@ GameObject:
   m_Component:
   - component: {fileID: 543450652863441380}
   - component: {fileID: 919132148925035359}
+  - component: {fileID: 919132148925035360}
   m_Layer: 0
   m_Name: Ak47
   m_TagString: Untagged
@@ -1127,7 +1128,27 @@ MonoBehaviour:
   mouseSensitivity: 1
   randomizeRecoil: 1
   randomRecoilConstraints: {x: -0.7, y: 0.7}
-  recoilPattern: {x: 0, y: 0}
+  recoilPattern: []
+  reloading: 0
+--- !u!95 &919132148925035360
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148925035358}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 0e20fd56de40fc4469fa026fcf05fd0e, type: 3}
+  m_Controller: {fileID: 9100000, guid: 755f623e87e988c4bafb7313bcb6f039, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &984288345742722243
 GameObject:
   m_ObjectHideFlags: 0
