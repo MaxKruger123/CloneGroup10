@@ -41,7 +41,7 @@ public class GunController : MonoBehaviour
         _currentAmmoInClip = clipSize;
         _ammoInReserve = reservedAmmoCapacity;
         _canShoot = true;
-        
+        muzzleFlashImage.sprite = null;
     }
 
     private void Update()
@@ -111,6 +111,13 @@ public class GunController : MonoBehaviour
             Vector2 recoil = new Vector2(xRecoil, yRecoil);
 
             _currentRotation += recoil;
+        }
+        else
+        {
+            int currentstep = clipSize + 1 - _currentAmmoInClip;
+            currentstep = Mathf.Clamp(currentstep, 0, recoilPattern.Length - 1);
+
+            _currentRotation += recoilPattern[currentstep];
         }
     }
 
