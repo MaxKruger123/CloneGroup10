@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,6 +38,9 @@ public class GunController : MonoBehaviour
 
     //Reloading
     public bool reloading;
+
+    //Animator
+    public Animator weaponAnimations;
     
 
     void Start()
@@ -47,13 +51,21 @@ public class GunController : MonoBehaviour
         muzzleFlashImage.sprite = null;
     }
 
+    void FixedUpdate()
+    {
+        lastPosition = transform.position;
+    }
+
     private void Update()
     {
+        
         DetermineAim();
         DetermineRotation();
 
         if (Input.GetMouseButton(0) && _canShoot && _currentAmmoInClip > 0)
         {
+            weaponAnimations.Play("Idle", 0, 0f);
+            weaponAnimations.enabled = false;
             _canShoot = false;
             _currentAmmoInClip--;
             StartCoroutine(ShootGun());
@@ -84,12 +96,32 @@ public class GunController : MonoBehaviour
     void DetermineAim()
     {
         Vector3 target = normalLocalPosition;
-        if (Input.GetMouseButton(1)) target = aimingLocalPosition;
+        if (Input.GetMouseButton(1))
+        {
+            weaponAnimations.Play("Idle", 0, 0f);
+            weaponAnimations.enabled = false;
+            
+            target = aimingLocalPosition;
+            
+            Vector3 desiredPosition = Vector3.Lerp(transform.localPosition, target, Time.deltaTime * aimSmoothing);
 
-        Vector3 desiredPosition = Vector3.Lerp(transform.localPosition, target, Time.deltaTime * aimSmoothing);
+            transform.localPosition = desiredPosition;
+        }
 
-        transform.localPosition = desiredPosition;
-        
+
+        else
+        {
+            
+            target = normalLocalPosition;
+            Vector3 desiredPosition = Vector3.Lerp(transform.localPosition, target, Time.deltaTime * aimSmoothing);
+            transform.localPosition = desiredPosition;
+            if (transform.localPosition == normalLocalPosition)
+            {
+                weaponAnimations.enabled = true;
+                
+            }
+            
+        }
     }
 
     void DetermineRecoil()
@@ -116,6 +148,7 @@ public class GunController : MonoBehaviour
 
     IEnumerator ShootGun()
     {
+
         DetermineRecoil();
         StartCoroutine(MuzzleFlash());
         
@@ -153,4 +186,6 @@ public class GunController : MonoBehaviour
         reloading = false;
         _canShoot = true;
     }
+
+    
 }

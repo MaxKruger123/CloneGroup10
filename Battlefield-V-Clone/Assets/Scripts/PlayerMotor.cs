@@ -18,6 +18,9 @@ public class PlayerMotor : MonoBehaviour
 
     public Vector3 moveDirection;
 
+    public Animator weaponAnimation;
+    public Rigidbody rb;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -50,6 +53,9 @@ public class PlayerMotor : MonoBehaviour
                 crouchTimer = 0f;
             }
         }
+
+        
+       
     }
 
     //recieve input from InputManager and apply them to our character controller
