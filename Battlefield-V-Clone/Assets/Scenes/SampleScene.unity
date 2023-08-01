@@ -358,7 +358,7 @@ GameObject:
   - component: {fileID: 560272864}
   - component: {fileID: 560272863}
   m_Layer: 5
-  m_Name: Image
+  m_Name: MuzzleFlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1026,7 +1026,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132148925035358}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.28600025, y: -0.27400002, z: 0.6630001}
+  m_LocalPosition: {x: 0.195, y: -0.266, z: 0.447}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children:
   - {fileID: 8879528567559092602}
@@ -1115,6 +1115,19 @@ MonoBehaviour:
   fireRate: 0.1
   clipSize: 30
   reservedAmmoCapacity: 270
+  muzzleFlashImage: {fileID: 560272863}
+  flashes:
+  - {fileID: 21300000, guid: 22a9ee01e6a58224f8ca2664172ebdc0, type: 3}
+  - {fileID: 21300000, guid: e316dc80e61d2f843a8a3fe53b1841a0, type: 3}
+  - {fileID: 21300000, guid: 52c02464fa27f3e449f8cbc6442adbad, type: 3}
+  normalLocalPosition: {x: 0.195, y: -0.266, z: 0.447}
+  aimingLocalPosition: {x: 0.023, y: -0.1465, z: 0.2829}
+  aimSmoothing: 10
+  weaponSwayAmount: -1
+  mouseSensitivity: 1
+  randomizeRecoil: 1
+  randomRecoilConstraints: {x: -0.7, y: 0.7}
+  recoilPattern: {x: 0, y: 0}
 --- !u!1 &984288345742722243
 GameObject:
   m_ObjectHideFlags: 0
@@ -1584,11 +1597,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6151043851774671068, guid: 700b5934d2e1d9b48b72907e71a2ddb2, type: 3}
+      propertyPath: near clip plane
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 8284505189720167270, guid: 700b5934d2e1d9b48b72907e71a2ddb2, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 964473982, guid: 700b5934d2e1d9b48b72907e71a2ddb2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 700b5934d2e1d9b48b72907e71a2ddb2, type: 3}
 --- !u!4 &6261337112693098760
 Transform:

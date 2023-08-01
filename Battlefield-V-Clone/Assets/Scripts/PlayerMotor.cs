@@ -16,6 +16,8 @@ public class PlayerMotor : MonoBehaviour
     private bool sprinting;
     public float crouchTimer;
 
+    public Vector3 moveDirection;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -53,7 +55,7 @@ public class PlayerMotor : MonoBehaviour
     //recieve input from InputManager and apply them to our character controller
     public void ProcessMove(Vector2 input)
     {
-        Vector3 moveDirection = Vector3.zero;
+        moveDirection = Vector3.zero;
         moveDirection.x = input.x;
         moveDirection.z = input.y;
         controller.Move(transform.TransformDirection(moveDirection) * speed * Time.deltaTime);
