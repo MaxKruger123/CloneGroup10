@@ -23,11 +23,16 @@ public class PlayerMotor : MonoBehaviour
     public GunController gunController;
     public Animator crosshairAnim;
 
+    public AudioSource foostepSound;
+
+    public bool bull = true;
+
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();
         Cursor.visible = false;
+        
     }
 
     // Update is called once per frame
@@ -56,8 +61,8 @@ public class PlayerMotor : MonoBehaviour
             }
         }
 
-
         
+
     }
 
     //recieve input from InputManager and apply them to our character controller
@@ -79,18 +84,36 @@ public class PlayerMotor : MonoBehaviour
             
             weaponAnimation.SetBool("isWalking", true);
             crosshairAnim.SetBool("isWalking", true);
+            
+            if (bull)
+            {
+                foostepSound.Play();
+            }
+            bull = false;
+            
         }
         else if (moveDirection.x < -0.7 && moveDirection.z > 0.7 || moveDirection.x > 0.7 && moveDirection.z > 0.7 || moveDirection.x < -0.7 && moveDirection.z < -0.7 || moveDirection.x > 0.7 && moveDirection.z < -0.7)
         {
            
             weaponAnimation.SetBool("isWalking", true);
             crosshairAnim.SetBool("isWalking", true);
+            
+            if (bull)
+            {
+                foostepSound.Play();
+            }
+            bull = false;
         }
         else
         {
             weaponAnimation.SetBool("isWalking", false);
             crosshairAnim.SetBool("isWalking", false);
+            
+            foostepSound.Stop();
+            bull = true;
         }
+
+
 
     }
 
@@ -119,7 +142,8 @@ public class PlayerMotor : MonoBehaviour
             gunController._canShoot = false;           
             weaponAnimation.SetBool("isWalking", false);
             gunController.bul = true;
-            
+            foostepSound.Stop();
+            bull = false;
         }
         else 
         {

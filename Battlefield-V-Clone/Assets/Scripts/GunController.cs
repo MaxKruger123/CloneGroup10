@@ -62,6 +62,9 @@ public class GunController : MonoBehaviour
 
     //reference
     public Camera fpsCam;
+    public Transform attackPoint;
+
+    
 
     void Start()
     {
@@ -190,6 +193,25 @@ public class GunController : MonoBehaviour
         {
             targetPoint = ray.GetPoint(75);//Just a point far away from the players
         }
+
+        //calculate the direction from attackpoint to target point
+        Vector3 directionWithoutSpread = targetPoint - attackPoint.position;
+
+        //Calculate spread
+        float x = Random.Range(-spread, spread);
+        float y = Random.Range(-spread, spread);
+
+        //Recalculate direction with spread
+        Vector3 directionWithSpread = directionWithoutSpread + new Vector3(x,y,0);
+
+        //Instantiate bullet/projectile
+        GameObject currentBullet = Instantiate(bullet, attackPoint.position, Quaternion.identity);
+        //Rotate bullet to shoot direction
+        currentBullet.transform.forward = directionWithSpread.normalized;
+        //Add forces to bullets
+        currentBullet.GetComponent<Rigidbody>().AddForce(directionWithSpread.normalized * shootForce, ForceMode.Impulse);
+        //currentBullet.GetComponent<Rigidbody>().AddForce(fpsCam.transform.up * upwardForce, ForceMode.Impulse);
+
 
         yield return new WaitForSeconds(fireRate);
         _canShoot = true;
