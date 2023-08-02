@@ -19,7 +19,7 @@ public class PlayerMotor : MonoBehaviour
     public Vector3 moveDirection;
 
     public Animator weaponAnimation;
-    public Rigidbody rb;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -70,7 +70,22 @@ public class PlayerMotor : MonoBehaviour
         
         playerVelocity.y = -2f;
         controller.Move(playerVelocity * Time.deltaTime);
-        Debug.Log(playerVelocity.y);
+        Debug.Log(moveDirection);
+
+        if (moveDirection.x == 1 || moveDirection.z == 1 || moveDirection.x == -1 || moveDirection.z == -1)
+        {
+            
+            weaponAnimation.SetBool("isWalking", true);
+        }
+        else if (moveDirection.x < -0.7 && moveDirection.z > 0.7 || moveDirection.x > 0.7 && moveDirection.z > 0.7 || moveDirection.x < -0.7 && moveDirection.z < -0.7 || moveDirection.x > 0.7 && moveDirection.z < -0.7)
+        {
+           
+            weaponAnimation.SetBool("isWalking", true);
+        }
+        else
+        {
+            weaponAnimation.SetBool("isWalking", false);
+        }
 
     }
 
@@ -94,8 +109,11 @@ public class PlayerMotor : MonoBehaviour
         sprinting = !sprinting;
         if (sprinting){
             speed = 6.6f;
+            weaponAnimation.SetBool("isRunning", true);
+            weaponAnimation.SetBool("isWalkking", false);
         }else{
             speed = 3.95f;
+            weaponAnimation.SetBool("isRunning", false);
         }
     }
 }

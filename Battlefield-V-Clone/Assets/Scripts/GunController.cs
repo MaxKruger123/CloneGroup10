@@ -41,7 +41,11 @@ public class GunController : MonoBehaviour
 
     //Animator
     public Animator weaponAnimations;
-    
+
+    //Checking movement distance for walkking/running animations
+    Vector3 lastPosition;
+    float moveMinimum = 0.1f;
+    private bool isMoving;
 
     void Start()
     {
@@ -53,7 +57,8 @@ public class GunController : MonoBehaviour
 
     void FixedUpdate()
     {
-        lastPosition = transform.position;
+        
+       
     }
 
     private void Update()
@@ -75,7 +80,21 @@ public class GunController : MonoBehaviour
         }
 
 
+       
+
+        
+
+        
     }
+
+   
+    
+     
+            
+           
+            
+        
+    
 
     
     void DetermineRotation()
@@ -98,13 +117,16 @@ public class GunController : MonoBehaviour
         Vector3 target = normalLocalPosition;
         if (Input.GetMouseButton(1))
         {
+            
             weaponAnimations.Play("Idle", 0, 0f);
             weaponAnimations.enabled = false;
-            
+            gameObject.transform.localRotation = Quaternion.Euler(0,0,0);
+
+
             target = aimingLocalPosition;
             
             Vector3 desiredPosition = Vector3.Lerp(transform.localPosition, target, Time.deltaTime * aimSmoothing);
-
+            Debug.Log(desiredPosition);
             transform.localPosition = desiredPosition;
         }
 

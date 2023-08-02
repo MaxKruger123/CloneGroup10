@@ -28,7 +28,7 @@ public class InputManager : MonoBehaviour
     {
         //tell playermotor to move using the valu from our movement action
         motor.ProcessMove(onFoot.Movement.ReadValue<Vector2>());
-        look.ProcessLook(onFoot.Look.ReadValue<Vector2>());
+        
     }
 
     private void LateUpdate()
