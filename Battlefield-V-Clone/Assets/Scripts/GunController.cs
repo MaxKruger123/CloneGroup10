@@ -41,14 +41,27 @@ public class GunController : MonoBehaviour
 
     //Animator
     public Animator weaponAnimations;
+    public GameObject crosshair;
 
     //Checking movement distance for walkking/running animations
     Vector3 lastPosition;
-    float moveMinimum = 0.1f;
+    
     private bool isMoving;
 
     public PlayerMotor playerMotor;
     public bool bul;
+
+    //bullet
+    public GameObject bullet;
+
+    //bulletforce
+    public float shootForce, upwardForce;
+
+    //Gun stats
+    public float spread;
+
+    //reference
+    public Camera fpsCam;
 
     void Start()
     {
@@ -104,7 +117,7 @@ public class GunController : MonoBehaviour
         Vector3 target = normalLocalPosition;
         if (Input.GetMouseButton(1))
         {
-            
+            crosshair.SetActive(false);
             weaponAnimations.Play("Idle", 0, 0f);
             weaponAnimations.enabled = false;
             if (bul == true)
@@ -126,7 +139,7 @@ public class GunController : MonoBehaviour
 
         else
         {
-            
+            crosshair.SetActive(true);
             target = normalLocalPosition;
             Vector3 desiredPosition = Vector3.Lerp(transform.localPosition, target, Time.deltaTime * aimSmoothing);
             transform.localPosition = desiredPosition;
@@ -166,7 +179,18 @@ public class GunController : MonoBehaviour
 
         DetermineRecoil();
         StartCoroutine(MuzzleFlash());
-        
+        Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit hit;
+        //check if ray hits something
+        Vector3 targetPoint;
+        if (Physics.Raycast(ray, out hit))
+        {
+            targetPoint = hit.point;
+        }else
+        {
+            targetPoint = ray.GetPoint(75);//Just a point far away from the players
+        }
+
         yield return new WaitForSeconds(fireRate);
         _canShoot = true;
     }

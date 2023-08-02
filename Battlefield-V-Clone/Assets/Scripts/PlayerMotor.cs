@@ -21,7 +21,7 @@ public class PlayerMotor : MonoBehaviour
     public Animator weaponAnimation;
 
     public GunController gunController;
-    
+    public Animator crosshairAnim;
 
     // Start is called before the first frame update
     void Start()
@@ -78,15 +78,18 @@ public class PlayerMotor : MonoBehaviour
         {
             
             weaponAnimation.SetBool("isWalking", true);
+            crosshairAnim.SetBool("isWalking", true);
         }
         else if (moveDirection.x < -0.7 && moveDirection.z > 0.7 || moveDirection.x > 0.7 && moveDirection.z > 0.7 || moveDirection.x < -0.7 && moveDirection.z < -0.7 || moveDirection.x > 0.7 && moveDirection.z < -0.7)
         {
            
             weaponAnimation.SetBool("isWalking", true);
+            crosshairAnim.SetBool("isWalking", true);
         }
         else
         {
             weaponAnimation.SetBool("isWalking", false);
+            crosshairAnim.SetBool("isWalking", false);
         }
 
     }
@@ -111,7 +114,8 @@ public class PlayerMotor : MonoBehaviour
         sprinting = !sprinting;
         if (sprinting){
             speed = 6.6f;
-            weaponAnimation.SetBool("isRunning", true);             
+            weaponAnimation.SetBool("isRunning", true);   
+            crosshairAnim.SetBool("isSprinting", true);
             gunController._canShoot = false;           
             weaponAnimation.SetBool("isWalking", false);
             gunController.bul = true;
@@ -119,6 +123,8 @@ public class PlayerMotor : MonoBehaviour
         }
         else 
         {
+            crosshairAnim.SetBool("isSprinting", false);
+            crosshairAnim.SetBool("isWalking", true);
             Debug.Log("Stopped sprinting");
             speed = 3.95f;
             gunController._canShoot = true;
