@@ -13,12 +13,14 @@ public class PlayerMotor : MonoBehaviour
 
     private bool lerpCrouch;
     private bool crouching;
-    private bool sprinting;
+    public bool sprinting;
     public float crouchTimer;
 
     public Vector3 moveDirection;
 
     public Animator weaponAnimation;
+
+    public GunController gunController;
     
 
     // Start is called before the first frame update
@@ -54,8 +56,8 @@ public class PlayerMotor : MonoBehaviour
             }
         }
 
+
         
-       
     }
 
     //recieve input from InputManager and apply them to our character controller
@@ -70,7 +72,7 @@ public class PlayerMotor : MonoBehaviour
         
         playerVelocity.y = -2f;
         controller.Move(playerVelocity * Time.deltaTime);
-        Debug.Log(moveDirection);
+        
 
         if (moveDirection.x == 1 || moveDirection.z == 1 || moveDirection.x == -1 || moveDirection.z == -1)
         {
@@ -109,11 +111,22 @@ public class PlayerMotor : MonoBehaviour
         sprinting = !sprinting;
         if (sprinting){
             speed = 6.6f;
-            weaponAnimation.SetBool("isRunning", true);
-            weaponAnimation.SetBool("isWalkking", false);
-        }else{
-            speed = 3.95f;
-            weaponAnimation.SetBool("isRunning", false);
+            weaponAnimation.SetBool("isRunning", true);             
+            gunController._canShoot = false;           
+            weaponAnimation.SetBool("isWalking", false);
+            gunController.bul = true;
+            
         }
+        else 
+        {
+            Debug.Log("Stopped sprinting");
+            speed = 3.95f;
+            gunController._canShoot = true;
+            weaponAnimation.SetBool("isRunning", false);
+            weaponAnimation.SetBool("isWalking", true);
+        }
+        
+        
+
     }
 }

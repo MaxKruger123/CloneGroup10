@@ -11,7 +11,7 @@ public class GunController : MonoBehaviour
     public int reservedAmmoCapacity = 270;
 
     //Variables that change througout the code
-    bool _canShoot;
+    public bool _canShoot;
     int _currentAmmoInClip;
     int _ammoInReserve;
 
@@ -47,6 +47,9 @@ public class GunController : MonoBehaviour
     float moveMinimum = 0.1f;
     private bool isMoving;
 
+    public PlayerMotor playerMotor;
+    public bool bul;
+
     void Start()
     {
         _currentAmmoInClip = clipSize;
@@ -71,31 +74,15 @@ public class GunController : MonoBehaviour
         {
             weaponAnimations.Play("Idle", 0, 0f);
             weaponAnimations.enabled = false;
+            bul = false;
             _canShoot = false;
             _currentAmmoInClip--;
             StartCoroutine(ShootGun());
-        } else if(Input.GetKeyDown(KeyCode.R) && _currentAmmoInClip < clipSize && _ammoInReserve > 0)
+        } else if(Input.GetKeyDown(KeyCode.R) && _currentAmmoInClip < clipSize && _ammoInReserve > 0 && playerMotor.speed < 6)
         {
             StartCoroutine(Reload());
-        }
-
-
-       
-
-        
-
-        
+        }        
     }
-
-   
-    
-     
-            
-           
-            
-        
-    
-
     
     void DetermineRotation()
     {
@@ -120,13 +107,19 @@ public class GunController : MonoBehaviour
             
             weaponAnimations.Play("Idle", 0, 0f);
             weaponAnimations.enabled = false;
+            if (bul == true)
+            {
+                _canShoot = true;
+            }
+            playerMotor.speed = 3.95f;
+            
             gameObject.transform.localRotation = Quaternion.Euler(0,0,0);
 
 
             target = aimingLocalPosition;
             
             Vector3 desiredPosition = Vector3.Lerp(transform.localPosition, target, Time.deltaTime * aimSmoothing);
-            Debug.Log(desiredPosition);
+            
             transform.localPosition = desiredPosition;
         }
 
@@ -191,7 +184,8 @@ public class GunController : MonoBehaviour
     {
         _canShoot = false;
         reloading = true;
-        yield return new WaitForSeconds(2);
+        weaponAnimations.SetBool("isReloading", true);
+        yield return new WaitForSeconds(2.39f);
 
         int amountNeeded = clipSize - _currentAmmoInClip;
         if (amountNeeded >= _ammoInReserve)
@@ -206,6 +200,7 @@ public class GunController : MonoBehaviour
         }
 
         reloading = false;
+        weaponAnimations.SetBool("isReloading", false);
         _canShoot = true;
     }
 

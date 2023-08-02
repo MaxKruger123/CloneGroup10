@@ -446,6 +446,7 @@ MonoBehaviour:
   fireRate: 0.1
   clipSize: 30
   reservedAmmoCapacity: 270
+  _canShoot: 0
   muzzleFlashImage: {fileID: 560272863}
   flashes:
   - {fileID: 21300000, guid: 22a9ee01e6a58224f8ca2664172ebdc0, type: 3}
@@ -454,13 +455,14 @@ MonoBehaviour:
   normalLocalPosition: {x: 0.195, y: -0.266, z: 0.447}
   aimingLocalPosition: {x: 0.023, y: -0.1465, z: 0.2829}
   aimSmoothing: 10
-  weaponSwayAmount: -1
+  weaponSwayAmount: 0
   mouseSensitivity: 1
   randomizeRecoil: 1
   randomRecoilConstraints: {x: -0.7, y: 0.7}
   recoilPattern: []
   reloading: 0
   weaponAnimations: {fileID: 7461277223376572665}
+  playerMotor: {fileID: 964473976}
 --- !u!95 &7461277223376572665
 Animator:
   serializedVersion: 3
@@ -1270,7 +1272,7 @@ MonoBehaviour:
   crouchTimer: 0
   moveDirection: {x: 0, y: 0, z: 0}
   weaponAnimation: {fileID: 7461277223376572665}
-  rb: {fileID: 0}
+  gunController: {fileID: 919132148925035359}
 --- !u!114 &964473977
 MonoBehaviour:
   m_ObjectHideFlags: 0
