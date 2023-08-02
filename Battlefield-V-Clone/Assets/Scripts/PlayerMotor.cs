@@ -11,6 +11,11 @@ public class PlayerMotor : MonoBehaviour
     public float gravity = -9.8f;
     public float jumpHeight = 3f;
 
+    private bool lerpCrouch;
+    private bool crouching;
+    private bool sprinting;
+    public float crouchTimer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,6 +26,22 @@ public class PlayerMotor : MonoBehaviour
     void Update()
     {
         isGrounded = controller.isGrounded;
+        if (lerpCrouch)
+        {
+            crouchTimer += Time.deltaTime;
+            float p = crouchTimer / 1;
+            p *= p;
+            if (crouching)
+            controller.height = Mathf.Lerp(controller.height, 1, p);
+            else
+            controller.height = Mathf.Lerp(controller.height, 2, p);
+
+            if (p > 1)
+            {
+                lerpCrouch = false;
+                crouchTimer = 0f;
+            }
+        }
     }
 
     //recieve input from InputManager and apply them to our character controller
@@ -44,6 +65,23 @@ public class PlayerMotor : MonoBehaviour
         if (isGrounded)
         {
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * gravity);
+        }
+    }
+
+    public void Crouch()
+    {
+        crouching = !crouching;
+        crouchTimer = 0;
+        lerpCrouch = true;
+    }
+
+    public void Sprint()
+    {
+        sprinting = !sprinting;
+        if (sprinting){
+            speed = 8f;
+        }else{
+            speed = 5f;
         }
     }
 }
