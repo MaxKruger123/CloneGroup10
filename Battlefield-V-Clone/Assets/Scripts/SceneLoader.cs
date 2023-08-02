@@ -7,7 +7,7 @@ public class SceneLoader : MonoBehaviour
 {
     public void playGame()
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("SampleScene 1");
     }
 
     public void BackToMainMenu()
