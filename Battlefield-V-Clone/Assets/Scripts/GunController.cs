@@ -47,12 +47,16 @@ public class GunController : MonoBehaviour
     float moveMinimum = 0.1f;
     private bool isMoving;
 
+    private UIManager _uiManager;
+
     void Start()
     {
         _currentAmmoInClip = clipSize;
         _ammoInReserve = reservedAmmoCapacity;
         _canShoot = true;
         muzzleFlashImage.sprite = null;
+
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
     }
 
     void FixedUpdate()
@@ -176,6 +180,8 @@ public class GunController : MonoBehaviour
         
         yield return new WaitForSeconds(fireRate);
         _canShoot = true;
+
+        _uiManager.UpdateAmmo(_currentAmmoInClip);
     }
 
     IEnumerator MuzzleFlash()
@@ -204,6 +210,8 @@ public class GunController : MonoBehaviour
             _currentAmmoInClip = clipSize;
             _ammoInReserve -= amountNeeded;
         }
+
+        _uiManager.UpdateAmmo(_currentAmmoInClip);
 
         reloading = false;
         _canShoot = true;
