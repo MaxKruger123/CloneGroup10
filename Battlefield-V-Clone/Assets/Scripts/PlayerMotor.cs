@@ -13,19 +13,26 @@ public class PlayerMotor : MonoBehaviour
 
     private bool lerpCrouch;
     private bool crouching;
-    private bool sprinting;
+    public bool sprinting;
     public float crouchTimer;
 
     public Vector3 moveDirection;
 
     public Animator weaponAnimation;
-    
+
+    public GunController gunController;
+    public Animator crosshairAnim;
+
+    public AudioSource foostepSound;
+    public AudioSource runningSound;
+    public bool bull = true;
 
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();
         Cursor.visible = false;
+        
     }
 
     // Update is called once per frame
@@ -55,7 +62,7 @@ public class PlayerMotor : MonoBehaviour
         }
 
         
-       
+
     }
 
     //recieve input from InputManager and apply them to our character controller
@@ -70,22 +77,43 @@ public class PlayerMotor : MonoBehaviour
         
         playerVelocity.y = -2f;
         controller.Move(playerVelocity * Time.deltaTime);
-        Debug.Log(moveDirection);
+        
 
         if (moveDirection.x == 1 || moveDirection.z == 1 || moveDirection.x == -1 || moveDirection.z == -1)
         {
             
             weaponAnimation.SetBool("isWalking", true);
+            crosshairAnim.SetBool("isWalking", true);
+            
+            if (bull)
+            {
+                foostepSound.Play();
+            }
+            bull = false;
+            
         }
         else if (moveDirection.x < -0.7 && moveDirection.z > 0.7 || moveDirection.x > 0.7 && moveDirection.z > 0.7 || moveDirection.x < -0.7 && moveDirection.z < -0.7 || moveDirection.x > 0.7 && moveDirection.z < -0.7)
         {
            
             weaponAnimation.SetBool("isWalking", true);
+            crosshairAnim.SetBool("isWalking", true);
+            
+            if (bull)
+            {
+                foostepSound.Play();
+            }
+            bull = false;
         }
         else
         {
             weaponAnimation.SetBool("isWalking", false);
+            crosshairAnim.SetBool("isWalking", false);
+            
+            foostepSound.Stop();
+            bull = true;
         }
+
+
 
     }
 
@@ -109,11 +137,28 @@ public class PlayerMotor : MonoBehaviour
         sprinting = !sprinting;
         if (sprinting){
             speed = 6.6f;
-            weaponAnimation.SetBool("isRunning", true);
-            weaponAnimation.SetBool("isWalkking", false);
-        }else{
-            speed = 3.95f;
-            weaponAnimation.SetBool("isRunning", false);
+            weaponAnimation.SetBool("isRunning", true);   
+            crosshairAnim.SetBool("isSprinting", true);
+            runningSound.Play();
+            gunController._canShoot = false;           
+            weaponAnimation.SetBool("isWalking", false);
+            gunController.bul = true;
+            foostepSound.Stop();
+            bull = false;
         }
+        else 
+        {
+            crosshairAnim.SetBool("isSprinting", false);
+            crosshairAnim.SetBool("isWalking", true);
+            Debug.Log("Stopped sprinting");
+            speed = 3.95f;
+            runningSound.Stop();
+            gunController._canShoot = true;
+            weaponAnimation.SetBool("isRunning", false);
+            weaponAnimation.SetBool("isWalking", true);
+        }
+        
+        
+
     }
 }
