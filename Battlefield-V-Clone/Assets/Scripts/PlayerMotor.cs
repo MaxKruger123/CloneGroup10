@@ -6,27 +6,62 @@ public class PlayerMotor : MonoBehaviour
 {
     private CharacterController controller;
     private Vector3 playerVelocity;
-    public float speed = 5f;
+    public float speed = 3.95f;
     private bool isGrounded;
     public float gravity = -9.8f;
     public float jumpHeight = 3f;
+
+    private bool lerpCrouch;
+    private bool crouching;
+    private bool sprinting;
+    public float crouchTimer;
+
+    public Vector3 moveDirection;
+
+    public Animator weaponAnimation;
+    
 
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<CharacterController>();
+        Cursor.visible = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         isGrounded = controller.isGrounded;
+        if (lerpCrouch)
+        {
+            crouchTimer += Time.deltaTime;
+            float p = crouchTimer / 1;
+            p *= p;
+            if (crouching)
+            {
+                controller.height = Mathf.Lerp(controller.height, 1, p);
+                speed = 2f;
+            }
+            else
+            {
+                controller.height = Mathf.Lerp(controller.height, 2, p);
+                speed = 3.95f;
+            }
+            if (p > 1)
+            {
+                lerpCrouch = false;
+                crouchTimer = 0f;
+            }
+        }
+
+        
+       
     }
 
     //recieve input from InputManager and apply them to our character controller
     public void ProcessMove(Vector2 input)
     {
-        Vector3 moveDirection = Vector3.zero;
+        moveDirection = Vector3.zero;
         moveDirection.x = input.x;
         moveDirection.z = input.y;
         controller.Move(transform.TransformDirection(moveDirection) * speed * Time.deltaTime);
@@ -35,7 +70,22 @@ public class PlayerMotor : MonoBehaviour
         
         playerVelocity.y = -2f;
         controller.Move(playerVelocity * Time.deltaTime);
-        Debug.Log(playerVelocity.y);
+        Debug.Log(moveDirection);
+
+        if (moveDirection.x == 1 || moveDirection.z == 1 || moveDirection.x == -1 || moveDirection.z == -1)
+        {
+            
+            weaponAnimation.SetBool("isWalking", true);
+        }
+        else if (moveDirection.x < -0.7 && moveDirection.z > 0.7 || moveDirection.x > 0.7 && moveDirection.z > 0.7 || moveDirection.x < -0.7 && moveDirection.z < -0.7 || moveDirection.x > 0.7 && moveDirection.z < -0.7)
+        {
+           
+            weaponAnimation.SetBool("isWalking", true);
+        }
+        else
+        {
+            weaponAnimation.SetBool("isWalking", false);
+        }
 
     }
 
@@ -44,6 +94,26 @@ public class PlayerMotor : MonoBehaviour
         if (isGrounded)
         {
             playerVelocity.y = Mathf.Sqrt(jumpHeight * -3.0f * gravity);
+        }
+    }
+
+    public void Crouch()
+    {
+        crouching = !crouching;
+        crouchTimer = 0;
+        lerpCrouch = true;
+    }
+
+    public void Sprint()
+    {
+        sprinting = !sprinting;
+        if (sprinting){
+            speed = 6.6f;
+            weaponAnimation.SetBool("isRunning", true);
+            weaponAnimation.SetBool("isWalkking", false);
+        }else{
+            speed = 3.95f;
+            weaponAnimation.SetBool("isRunning", false);
         }
     }
 }

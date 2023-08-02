@@ -18,6 +18,9 @@ public class InputManager : MonoBehaviour
         motor = GetComponent<PlayerMotor>();
         onFoot.Jump.performed += ctx => motor.Jump();
         look = GetComponent<PlayerLook>();
+
+        onFoot.Crouch.performed += ctx => motor.Crouch();
+        onFoot.Sprint.performed += ctx => motor.Sprint();
     }
 
     // Update is called once per frame
@@ -25,7 +28,7 @@ public class InputManager : MonoBehaviour
     {
         //tell playermotor to move using the valu from our movement action
         motor.ProcessMove(onFoot.Movement.ReadValue<Vector2>());
-        look.ProcessLook(onFoot.Look.ReadValue<Vector2>());
+        
     }
 
     private void LateUpdate()
