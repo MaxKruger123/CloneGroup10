@@ -24,7 +24,7 @@ public class PlayerMotor : MonoBehaviour
     public Animator crosshairAnim;
 
     public AudioSource foostepSound;
-
+    public AudioSource runningSound;
     public bool bull = true;
 
     // Start is called before the first frame update
@@ -139,6 +139,7 @@ public class PlayerMotor : MonoBehaviour
             speed = 6.6f;
             weaponAnimation.SetBool("isRunning", true);   
             crosshairAnim.SetBool("isSprinting", true);
+            runningSound.Play();
             gunController._canShoot = false;           
             weaponAnimation.SetBool("isWalking", false);
             gunController.bul = true;
@@ -151,6 +152,7 @@ public class PlayerMotor : MonoBehaviour
             crosshairAnim.SetBool("isWalking", true);
             Debug.Log("Stopped sprinting");
             speed = 3.95f;
+            runningSound.Stop();
             gunController._canShoot = true;
             weaponAnimation.SetBool("isRunning", false);
             weaponAnimation.SetBool("isWalking", true);
