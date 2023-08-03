@@ -84,7 +84,7 @@ public class PlayerMotor : MonoBehaviour
             
             weaponAnimation.SetBool("isWalking", true);
             crosshairAnim.SetBool("isWalking", true);
-            gunController.spread = 0.3f;
+            gunController.spread = 0.6f;
             
             if (bull)
             {
@@ -98,7 +98,7 @@ public class PlayerMotor : MonoBehaviour
            
             weaponAnimation.SetBool("isWalking", true);
             crosshairAnim.SetBool("isWalking", true);
-            gunController.spread = 0.3f;
+            gunController.spread = 0.7f;
 
             if (bull)
             {
@@ -146,9 +146,9 @@ public class PlayerMotor : MonoBehaviour
                 weaponAnimation.SetBool("isRunning", true);
                 crosshairAnim.SetBool("isSprinting", true);
                 runningSound.Play();
-                gunController.spread = 3;
+               
             }
-            
+            gunController.spread = 1.5f;
             gunController._canShoot = false;           
             weaponAnimation.SetBool("isWalking", false);
             gunController.bul = true;
