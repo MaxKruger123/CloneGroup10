@@ -12,8 +12,8 @@ public class GunController : MonoBehaviour
 
     //Variables that change througout the code
     public bool _canShoot;
-    int _currentAmmoInClip;
-    int _ammoInReserve;
+    public int _currentAmmoInClip;
+    public int _ammoInReserve;
 
     //Muzzle Flash
     public Image muzzleFlashImage;
@@ -72,6 +72,7 @@ public class GunController : MonoBehaviour
         _ammoInReserve = reservedAmmoCapacity;
         _canShoot = true;
         muzzleFlashImage.sprite = null;
+        
     }
 
     void FixedUpdate()
