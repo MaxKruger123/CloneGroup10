@@ -12,7 +12,7 @@ public class PlayerLook : MonoBehaviour
     public float ySensitivity = 30f;
     
 
-    public void ProcessLook(Vector2 input)
+    /*public void ProcessLook(Vector2 input)
     {
         float mouseX = input.x;
         float mouseY = input.y;
@@ -26,5 +26,5 @@ public class PlayerLook : MonoBehaviour
 
         //rotate player to look left and right
         transform.Rotate(Vector3.up * (mouseX * Time.deltaTime) * xSensitivity);    
-    }
+    }*/
 }

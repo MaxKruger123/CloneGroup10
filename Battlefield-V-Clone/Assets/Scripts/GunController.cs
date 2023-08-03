@@ -11,9 +11,9 @@ public class GunController : MonoBehaviour
     public int reservedAmmoCapacity = 270;
 
     //Variables that change througout the code
-    bool _canShoot;
-    int _currentAmmoInClip;
-    int _ammoInReserve;
+    public bool _canShoot;
+    public int _currentAmmoInClip;
+    public int _ammoInReserve;
 
     //Muzzle Flash
     public Image muzzleFlashImage;
@@ -41,13 +41,30 @@ public class GunController : MonoBehaviour
 
     //Animator
     public Animator weaponAnimations;
+    public GameObject crosshair;
 
     //Checking movement distance for walkking/running animations
     Vector3 lastPosition;
-    float moveMinimum = 0.1f;
+    
     private bool isMoving;
 
-    private UIManager _uiManager;
+    public PlayerMotor playerMotor;
+    public bool bul;
+
+    //bullet
+    public GameObject bullet;
+
+    //bulletforce
+    public float shootForce, upwardForce;
+
+    //Gun stats
+    public float spread;
+
+    //reference
+    public Camera fpsCam;
+    public Transform attackPoint;
+
+    
 
     void Start()
     {
@@ -55,8 +72,7 @@ public class GunController : MonoBehaviour
         _ammoInReserve = reservedAmmoCapacity;
         _canShoot = true;
         muzzleFlashImage.sprite = null;
-
-        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        
     }
 
     void FixedUpdate()
@@ -75,31 +91,15 @@ public class GunController : MonoBehaviour
         {
             weaponAnimations.Play("Idle", 0, 0f);
             weaponAnimations.enabled = false;
+            bul = false;
             _canShoot = false;
             _currentAmmoInClip--;
             StartCoroutine(ShootGun());
-        } else if(Input.GetKeyDown(KeyCode.R) && _currentAmmoInClip < clipSize && _ammoInReserve > 0)
+        } else if(Input.GetKeyDown(KeyCode.R) && _currentAmmoInClip < clipSize && _ammoInReserve > 0 && playerMotor.speed < 6)
         {
             StartCoroutine(Reload());
-        }
-
-
-       
-
-        
-
-        
+        }        
     }
-
-   
-    
-     
-            
-           
-            
-        
-    
-
     
     void DetermineRotation()
     {
@@ -121,23 +121,29 @@ public class GunController : MonoBehaviour
         Vector3 target = normalLocalPosition;
         if (Input.GetMouseButton(1))
         {
-            
+            crosshair.SetActive(false);
             weaponAnimations.Play("Idle", 0, 0f);
             weaponAnimations.enabled = false;
+            if (bul == true)
+            {
+                _canShoot = true;
+            }
+            playerMotor.speed = 3.95f;
+            
             gameObject.transform.localRotation = Quaternion.Euler(0,0,0);
 
 
             target = aimingLocalPosition;
             
             Vector3 desiredPosition = Vector3.Lerp(transform.localPosition, target, Time.deltaTime * aimSmoothing);
-            Debug.Log(desiredPosition);
+            
             transform.localPosition = desiredPosition;
         }
 
 
         else
         {
-            
+            crosshair.SetActive(true);
             target = normalLocalPosition;
             Vector3 desiredPosition = Vector3.Lerp(transform.localPosition, target, Time.deltaTime * aimSmoothing);
             transform.localPosition = desiredPosition;
@@ -177,11 +183,39 @@ public class GunController : MonoBehaviour
 
         DetermineRecoil();
         StartCoroutine(MuzzleFlash());
-        
+        Ray ray = fpsCam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit hit;
+        //check if ray hits something
+        Vector3 targetPoint;
+        if (Physics.Raycast(ray, out hit))
+        {
+            targetPoint = hit.point;
+        }else
+        {
+            targetPoint = ray.GetPoint(75);//Just a point far away from the players
+        }
+
+        //calculate the direction from attackpoint to target point
+        Vector3 directionWithoutSpread = targetPoint - attackPoint.position;
+
+        //Calculate spread
+        float x = Random.Range(-spread, spread);
+        float y = Random.Range(-spread, spread);
+
+        //Recalculate direction with spread
+        Vector3 directionWithSpread = directionWithoutSpread + new Vector3(x,y,0);
+
+        //Instantiate bullet/projectile
+        GameObject currentBullet = Instantiate(bullet, attackPoint.position, Quaternion.identity);
+        //Rotate bullet to shoot direction
+        currentBullet.transform.forward = directionWithSpread.normalized;
+        //Add forces to bullets
+        currentBullet.GetComponent<Rigidbody>().AddForce(directionWithSpread.normalized * shootForce, ForceMode.Impulse);
+        //currentBullet.GetComponent<Rigidbody>().AddForce(fpsCam.transform.up * upwardForce, ForceMode.Impulse);
+
+
         yield return new WaitForSeconds(fireRate);
         _canShoot = true;
-
-        _uiManager.UpdateAmmo(_currentAmmoInClip);
     }
 
     IEnumerator MuzzleFlash()
@@ -197,7 +231,8 @@ public class GunController : MonoBehaviour
     {
         _canShoot = false;
         reloading = true;
-        yield return new WaitForSeconds(2);
+        weaponAnimations.SetBool("isReloading", true);
+        yield return new WaitForSeconds(2.39f);
 
         int amountNeeded = clipSize - _currentAmmoInClip;
         if (amountNeeded >= _ammoInReserve)
@@ -211,9 +246,8 @@ public class GunController : MonoBehaviour
             _ammoInReserve -= amountNeeded;
         }
 
-        _uiManager.UpdateAmmo(_currentAmmoInClip);
-
         reloading = false;
+        weaponAnimations.SetBool("isReloading", false);
         _canShoot = true;
     }
 
