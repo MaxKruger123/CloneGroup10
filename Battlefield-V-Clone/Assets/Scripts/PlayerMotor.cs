@@ -84,6 +84,7 @@ public class PlayerMotor : MonoBehaviour
             
             weaponAnimation.SetBool("isWalking", true);
             crosshairAnim.SetBool("isWalking", true);
+            gunController.spread = 0.3f;
             
             if (bull)
             {
@@ -97,7 +98,8 @@ public class PlayerMotor : MonoBehaviour
            
             weaponAnimation.SetBool("isWalking", true);
             crosshairAnim.SetBool("isWalking", true);
-            
+            gunController.spread = 0.3f;
+
             if (bull)
             {
                 foostepSound.Play();
@@ -108,7 +110,8 @@ public class PlayerMotor : MonoBehaviour
         {
             weaponAnimation.SetBool("isWalking", false);
             crosshairAnim.SetBool("isWalking", false);
-            
+            gunController.spread = 0.3f;
+
             foostepSound.Stop();
             bull = true;
         }
@@ -137,9 +140,15 @@ public class PlayerMotor : MonoBehaviour
         sprinting = !sprinting;
         if (sprinting){
             speed = 6.6f;
-            weaponAnimation.SetBool("isRunning", true);   
-            crosshairAnim.SetBool("isSprinting", true);
-            runningSound.Play();
+
+            if (speed == 6.6f && moveDirection.x < -0.7 && moveDirection.z > 0.7 || moveDirection.x > 0.7 && moveDirection.z > 0.7 || moveDirection.x < -0.7 && moveDirection.z < -0.7 || moveDirection.x > 0.7 && moveDirection.z < -0.7 || moveDirection.x == 1 || moveDirection.z == 1 || moveDirection.x == -1 || moveDirection.z == -1)
+            {
+                weaponAnimation.SetBool("isRunning", true);
+                crosshairAnim.SetBool("isSprinting", true);
+                runningSound.Play();
+                gunController.spread = 3;
+            }
+            
             gunController._canShoot = false;           
             weaponAnimation.SetBool("isWalking", false);
             gunController.bul = true;
@@ -150,7 +159,7 @@ public class PlayerMotor : MonoBehaviour
         {
             crosshairAnim.SetBool("isSprinting", false);
             crosshairAnim.SetBool("isWalking", true);
-            Debug.Log("Stopped sprinting");
+            
             speed = 3.95f;
             runningSound.Stop();
             gunController._canShoot = true;
