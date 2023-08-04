@@ -64,6 +64,13 @@ public class GunController : MonoBehaviour
     public Camera fpsCam;
     public Transform attackPoint;
 
+    //Sound Effects
+    public AudioSource gunShot;
+    public AudioClip shot;
+
+    public AudioSource reload;
+    public AudioClip reloadEffect;
+
     
 
     void Start()
@@ -91,6 +98,7 @@ public class GunController : MonoBehaviour
         {
             weaponAnimations.Play("Idle", 0, 0f);
             weaponAnimations.enabled = false;
+            gunShot.PlayOneShot(shot);
             bul = false;
             _canShoot = false;
             _currentAmmoInClip--;
@@ -98,6 +106,7 @@ public class GunController : MonoBehaviour
         } else if(Input.GetKeyDown(KeyCode.R) && _currentAmmoInClip < clipSize && _ammoInReserve > 0 && playerMotor.speed < 6)
         {
             StartCoroutine(Reload());
+            reload.PlayOneShot(reloadEffect);
         }        
     }
     
